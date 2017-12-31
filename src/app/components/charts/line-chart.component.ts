@@ -7,10 +7,7 @@ import io from 'socket.io-client';
 })
 export class LineChartComponent implements OnInit{
 
-  ngOnInit(){
-  }
-
-/*
+ 
   socket: any;
   constructor(){
 
@@ -20,19 +17,50 @@ export class LineChartComponent implements OnInit{
   ngOnInit(){
 
       this.socket.on('connect', function () {
-      console.log('this is a socket');
+      console.log('this is a socket');   
 
-      this.socket.on('statsdata', function (data) {
-      console.log('dddd'+data);
-      });      
-    });
-  }  */
+      this.socket.emit('statsdata', {data: 'I\'m connected!'});
+
+    }.bind(this));
+
+      this.socket.on('my response', function (data) {
+
+        let streamData = JSON.parse(data)
+        console.log(data)
+        console.log('reply:'+streamData.total);
+
+
+
+      let _lineChartData:Array<any> = new Array(this.lineChartData.length);
+      
+
+
+      for (let i = 0; i < this.lineChartData.length; i++) {
+        _lineChartData[i] = {data: new Array(this.lineChartData[i].data.length), label: this.lineChartData[i].label};
+        
+        for (let j = 0; j < this.lineChartData[i].data.length-1; j++) {
+          _lineChartData[i].data[j] = this.lineChartData[i].data[j+1];
+        }         
+
+        _lineChartData[i].data[this.lineChartData[i].data.length-1] = streamData.total;
+
+        }
+
+        for (let j = 0; j < this.lineChartLabels.length-1; j++) {
+          this.lineChartLabels[j] = this.lineChartLabels[j+1];
+        }  
+        
+       this.lineChartLabels[this.lineChartLabels.length-1] = streamData.date;
+
+       this.lineChartData = _lineChartData;
+       console.log(this.lineChartLabels)
+
+      }.bind(this));
+  } 
 
   // lineChart
   public lineChartData:Array<any> = [
-    {data: [45, 32, 56, 45, 59, 59, 59], label: 'Total Count'},
-    {data: [28, 23, 40, 19, 28, 27, 18], label: 'Mens Count'},
-    {data: [18, 25, 77, 9, 25, 28, 22], label: 'Women Count'}
+    {data: [45, 32, 56, 45, 59, 59, 59], label: 'Total Count'}
   ];
   public lineChartLabels:Array<any> = ['20/12 17:59', '20/12 18:00', '20/12 18:01', '20/12 18:05', '20/12 18:10', '20/12 18:23', '20/12 18:25'];
   public lineChartOptions:any = {
@@ -68,15 +96,6 @@ export class LineChartComponent implements OnInit{
   public lineChartType:string = 'line';
  
   public randomize():void {
-
-    /* console.log('callign stats data');
-    
-    this.socket.on('connect', function(){
-          console.log('event fired:');
-      });
-
-    console.log('after calling stats data');
-    */
 
 
     let _lineChartData:Array<any> = new Array(this.lineChartData.length);
