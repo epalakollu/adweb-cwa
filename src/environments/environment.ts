@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  server_url: 'http://f5d78c48.ngrok.io/analytics'
+  server_url: 'https://f5d78c48.ngrok.io/analytics'
 };
