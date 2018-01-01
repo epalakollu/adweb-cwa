@@ -16,9 +16,8 @@ export class LineChartComponent implements OnInit{
   socket: any;
 
   constructor(){
-    //this.socket = io('http://localhost:8000/analytics');
-    this.socket = io(environment.server_url);
 
+    this.socket = io(environment.server_url);
     
   }
 
@@ -30,9 +29,9 @@ export class LineChartComponent implements OnInit{
     }.bind(this));
 
     this.socket.on('face time stats', function (data) {    
-      //update time charts
+      // update time charts
       this.updateTimeChart(data);     
-      //update gender charts
+      // update gender charts
       this.updateGenderChart(data);
     }.bind(this));
 
@@ -40,17 +39,21 @@ export class LineChartComponent implements OnInit{
   } 
 
   // lineChart time spent
+  
   public lineChartData:Array<any> = [
     {data: [45, 32, 56, 45, 59, 59, 59], label: 'Time Spent'}
   ];
-  public lineChartLabels:Array<any> = ['20/12 17:59', '20/12 18:00', '20/12 18:01', '20/12 18:05', '20/12 18:10', '20/12 18:23', '20/12 18:25'];
+  
+  public lineChartLabels:Array<any> = ['20/12 17:59', '20/12 18:00', '20/12 18:01', '20/12 18:05', '20/12 18:10', 
+                                       '20/12 18:23', '20/12 18:25'];
 
  // Gender lineChart 
   public lineChartGenderData:Array<any> = [
     {data: [1, 2, 0, 1, 1, 2, 1], label: 'Male'},
     {data: [1, 0, 1, 0, 0, 1, 0], label: 'Female'}
   ];
-  public lineChartGenderLabels:Array<any> = ['20/12 17:59', '20/12 18:00', '20/12 18:01', '20/12 18:05', '20/12 18:10', '20/12 18:23', '20/12 18:25'];
+  public lineChartGenderLabels:Array<any> = ['20/12 17:59', '20/12 18:00', '20/12 18:01', '20/12 18:05', 
+                                              '20/12 18:10', '20/12 18:23', '20/12 18:25'];
   
 
   
@@ -126,10 +129,12 @@ export class LineChartComponent implements OnInit{
           _lineChartGenderData[i].data[j] = this.lineChartGenderData[i].data[j+1];
         }         
         
-        if(i==0)
+        if(i==0){
           _lineChartGenderData[i].data[this.lineChartGenderData[i].data.length-1] = streamData.maleFacesCount;
-        else
+        }
+        else{
           _lineChartGenderData[i].data[this.lineChartGenderData[i].data.length-1] = streamData.femaleFacesCount;
+        }
 
         }
 
