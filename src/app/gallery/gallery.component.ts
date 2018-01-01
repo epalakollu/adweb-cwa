@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation, NgxGalleryComponent } from 'ngx-gallery';
 import io from 'socket.io-client';
-
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-gallery',
@@ -19,7 +19,8 @@ export class GalleryComponent implements OnInit {
     socket: any;
 
     constructor(){
-      this.socket = io('http://localhost:8000/analytics');
+    //this.socket = io('http://localhost:8000/analytics');
+    this.socket = io(environment.server_url);
     }
 
     delay(ms: number) {

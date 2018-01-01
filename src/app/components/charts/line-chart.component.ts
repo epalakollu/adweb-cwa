@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild  } from '@angular/core';
 import io from 'socket.io-client';
 import {NgxGalleryComponent } from 'ngx-gallery';
+import {environment} from '../../../environments/environment';
+
  
 @Component({
   selector: 'line-chart',
@@ -14,7 +16,10 @@ export class LineChartComponent implements OnInit{
   socket: any;
 
   constructor(){
-    this.socket = io('http://localhost:8000/analytics');
+    //this.socket = io('http://localhost:8000/analytics');
+    this.socket = io(environment.server_url);
+
+    
   }
 
   ngOnInit(){
