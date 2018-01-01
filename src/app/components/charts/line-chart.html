@@ -12,6 +12,21 @@
                 (chartClick)="chartClicked($event)"></canvas>
     </div>
   </div>
+  <div class="col-md-6">
+    <div style="display: block;">
+    <canvas baseChart width="200" height="100"
+                [datasets]="lineChartGenderData"
+                [labels]="lineChartGenderLabels"
+                [options]="lineChartOptions"
+                [colors]="lineChartColors"
+                [legend]="lineChartLegend"
+                [chartType]="lineChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+    </div>
+</div>
+</div>
+
 
   <!--
   <div class="col-md-6" style="margin-bottom: 10px">

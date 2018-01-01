@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation, NgxGalleryComponent } from 'ngx-gallery';
+import io from 'socket.io-client';
+
 
 @Component({
   selector: 'app-gallery',
@@ -10,16 +12,55 @@ export class GalleryComponent implements OnInit {
 
     galleryOptions: NgxGalleryOptions[];
     galleryImages: NgxGalleryImage[];
- 
-    ngOnInit(){     
- 
+
+
+    @ViewChild(NgxGalleryComponent) ngxImageGallery: NgxGalleryComponent;
+
+    socket: any;
+
+    constructor(){
+      this.socket = io('http://localhost:8000/analytics');
+    }
+
+    delay(ms: number) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async updateGallery(maleFaces:number,femaleFaces:number){
+     
+      if(maleFaces>0)
+        this.ngxImageGallery.show(4);
+      else if (femaleFaces>0)
+        this.ngxImageGallery.show(0);
+      
+      //await this.delay(5000);
+
+    }
+
+    ngOnInit(){  
+
+      this.socket.on('connect', function () {
+         console.log('this is a socket');   
+         this.socket.emit('statsdata', {data: 'I\'m connected!'});
+      }.bind(this));
+
+      this.socket.on('faces data', function (data) {  
+        let streamData = JSON.parse(data)
+        console.log(data); 
+
+        this.updateGallery(streamData.maleFaces,streamData.femaleFaces);
+
+      }.bind(this));
+
+
+
         this.galleryOptions = [
             {
                 width: '600px',
                 height: '780px',
                 thumbnailsColumns: 4,
                 imageAnimation: NgxGalleryAnimation.Slide,
-                imageAutoPlay: true,
+                imageAutoPlay: false,
                 imageAutoPlayInterval: 2000,
                 imageAutoPlayPauseOnHover: true,
                 imageInfinityMove: true,
